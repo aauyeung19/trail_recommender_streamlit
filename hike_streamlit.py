@@ -17,7 +17,7 @@ def save_comp_id(comp_id):
     return (comp_id)
 if __name__ == "__main__":
     hikes_df, hike_tag_dummies, ht_mat, dt_mat = load_tables()
-
+    st.image('header.JPG', use_column_width=True)
     st.title("All Trails Recommendations")
     method = st.sidebar.radio('Pick your method', ["Select a Hike", "I'm Feeling Lucky"])
     if method == "Select a Hike":
@@ -29,7 +29,6 @@ if __name__ == "__main__":
         trail_name = st.selectbox('Trail Name', hikes_df[mask]["trail_name"].unique())
         mask = mask & (hikes_df["trail_name"] == trail_name)
         comp_id = hikes_df[mask].index[0]
-        st.button('Show Me')
     else:
         st.balloons()
         comp_id = np.random.choice(hikes_df.index)
