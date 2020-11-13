@@ -10,7 +10,11 @@ def load_tables():
     hike_tag_dummies = pd.read_csv('hike_tag_dummies.csv', index_col=0)
     ht_mat = pd.read_csv('ht_mat.csv', index_col=0)
     dt_mat = pd.read_csv('dt_mat.csv', index_col=0)
-    reviews = pd.read_csv('r_corex.csv', index_col=0)
+    reviews = []
+    r_list = ['r1', 'r2', 'r3', 'r4', 'r5', 'r6', 'r7', 'r8', 'r9']
+    for filename in r_list:
+        reviews.append(pd.read_csv(filename+'.csv', index_col=0))
+    reviews = pd.concat(reviews, ignore_index=True)
     return hikes_df, hike_tag_dummies, ht_mat, dt_mat, reviews
 
 @st.cache(allow_output_mutation=True)
@@ -20,11 +24,6 @@ def store_random_id():
 @st.cache(allow_output_mutation=True)
 def store_comp_id():
     return []
-
-
-
-    
-
 
 if __name__ == "__main__":
     hikes_df, hike_tag_dummies, ht_mat, dt_mat, reviews = load_tables()
