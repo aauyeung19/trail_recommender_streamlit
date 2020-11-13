@@ -42,7 +42,7 @@ if __name__ == "__main__":
         )
         method = st.radio('Pick your method', ["Search By Trail Name", "Select a Hike", "I'm Feeling Lucky"])
         if method == "Search By Trail Name":
-            trail_name = st.selectbox('Type your search here:', np.insert(hikes_df["trail_name"].unique(), 0, ""))
+            trail_name = st.selectbox('Type your search here:', hikes_df["trail_name"].unique())
             if not trail_name:
                 st.stop()
             mask = hikes_df["trail_name"] == trail_name
