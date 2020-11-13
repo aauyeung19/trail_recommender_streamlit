@@ -36,8 +36,19 @@ if __name__ == "__main__":
     if nav == 'Select a Hike':
         st.title("All Trails Recommendations")
         st.image('mt washington ravine .JPG', use_column_width=True)
+        st.markdown(
+            "Hello!  Please feel feel free to use this mini app to find recommendations for hikes you enjoy!"
+            "When you've selected a hike you like, be sure to **lock in** your selection at the bottom"
+        )
+        method = st.radio('Pick your method', ["Search By Trail Name", "Select a Hike", "I'm Feeling Lucky"])
+        if method == "Search By Trail Name":
+            trail_name = st.selectbox('Type your search here:', np.insert(hikes_df["trail_name"].unique(), 0, ""))
+            if not trail_name:
+                st.stop()
+            mask = hikes_df["trail_name"] == trail_name
+            comp_id = hikes_df[mask].index
 
-        method = st.radio('Pick your method', ["Select a Hike", "I'm Feeling Lucky"])
+
         if method == "Select a Hike":
             st.write("What hike did you like?")
             state = st.selectbox('State', hikes_df["state"].unique())
@@ -48,7 +59,7 @@ if __name__ == "__main__":
             mask = mask & (hikes_df["trail_name"] == trail_name)
             comp_id = hikes_df[mask].index
 
-        else:
+        if method == "I'm Feeling Lucky":
             random_id_cache = store_random_id()
             if len(random_id_cache) == 0:
                 st.balloons()
@@ -92,10 +103,14 @@ if __name__ == "__main__":
         if lock:
             cached_id.append(comp_id)
 
-    locked_title.subheader("Trail Name: ")
-    locked_title_value.write(str(hikes_df.loc[cached_id[-1]]['trail_name'][0]))
-    locked_info.write(str(hikes_df.loc[cached_id[-1]]['trail_description'][0]))
-
+    try:
+        locked_title.subheader("Trail Name: ")
+        locked_title_value.write(str(hikes_df.loc[cached_id[-1]]['trail_name'][0]))
+        locked_info.write(str(hikes_df.loc[cached_id[-1]]['trail_description'][0]))
+    except:
+        if len(cached_id) == 0:
+            st.warning("Don't forget to Lock In your selection!")
+            st.stop()
     if nav == "Compare Hikes":
         st.image('header.JPG', use_column_width=True)
         comp_id = hikes_df.loc[[cached_id[-1][0]]].index
